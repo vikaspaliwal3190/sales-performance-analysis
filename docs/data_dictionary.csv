@@ -1,0 +1,31 @@
+Table,Column,Business meaning,Expected type,Validation / notes
+orders_clean,order_id,Order identifier; may repeat if fact table is order-line grain,Integer/text as source key,Check nulls and distinct count; define blank handling
+orders_clean,order_date,Date/time associated with transaction,DATE or DATETIME,"Check nulls, invalid source strings, range, calendar relationship"
+orders_clean,customer_id,Customer foreign key,Same type as customers_clean.customer_id,May be null or unmatched; quantify impact
+orders_clean,product_id,Product foreign key,Same type as products_clean.product_id,May be null or unmatched; category analysis can omit these rows
+orders_clean,region_id,Region foreign key,Same type as regions_clean.region_id,May be null or unmatched
+orders_clean,quantity,Quantity recorded on transaction,Numeric,Negative values may represent returns/corrections; confirm policy
+orders_clean,discount,Discount rate or amount,Numeric,Confirm scale; scripts assume 0.10 = 10%
+orders_clean,sales_amount,Sales amount for transaction row,DECIMAL preferred,"Confirm currency, null policy and whether returns are negative"
+orders_clean,cost_amount,Cost amount for transaction row,DECIMAL preferred,Confirm null policy and business definition
+orders_clean,profit,Recorded profit for transaction row,DECIMAL preferred,Do not assume equals sales minus cost; reconcile discrepancies
+customers_clean,customer_id,Customer primary/business key,Same type as orders_clean.customer_id,Must be unique for a one-to-many relationship
+customers_clean,customer_name,Customer display name,Text,Avoid publishing personal/customer-level data
+customers_clean,gender,Gender attribute if supplied,Text/category,Check missing/inconsistent categories; use only if appropriate
+customers_clean,age,Customer age,Integer/numeric,Check plausible range and privacy implications
+customers_clean,customer_segment,Customer segment classification,Text/category,Standardize labels; document unknown segment
+customers_clean,signup_date,Customer signup date,DATE,Check valid range and null handling
+products_clean,product_id,Product primary/business key,Same type as orders_clean.product_id,Must be unique for one-to-many relationship
+products_clean,product_name,Product display name,Text,Validate names against category/subcategory
+products_clean,category,High-level product category,Text/category,Trim and standardize; taxonomy requires review
+products_clean,sub_category,Product subcategory,Text/category,Validate allowed category/subcategory combinations
+products_clean,cost,Product master cost,DECIMAL/numeric,May differ from transaction cost; define which is authoritative
+products_clean,selling_price,Product master selling price,DECIMAL/numeric,May differ from realized transaction price
+regions_clean,region_id,Region primary/business key,Same type as orders_clean.region_id,Must be unique for one-to-many relationship
+regions_clean,state,State/province label,Text,Normalize naming and mapping
+regions_clean,city,City label,Text,Normalize naming; avoid inferring market size
+regions_clean,region,Regional grouping,Text/category,Normalize labels and check mapping coverage
+DimDate,Date,Calendar date related to FactSales,Date,Continuous date table; mark as date table in Power BI
+FactSales,sales_amount,Measure used for total sales,Decimal,DAX: SUM(FactSales[sales_amount])
+FactSales,profit,Recorded profit measure,Decimal,DAX: SUM(FactSales[profit])
+FactSales,order_id,Order identifier for order count,Source key type,DAX DISTINCTCOUNT can count blank; align definition with SQL
