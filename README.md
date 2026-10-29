@@ -1,7 +1,5 @@
 # Sales Performance Analysis — Data Analyst Portfolio Project
 
-> **Project status: IN PROGRESS / VALIDATION PENDING.** Numerical findings described as preliminary in this repository are exploratory calculations from uploaded CSV files. They have **not** been reconciled against the cleaned MySQL tables or the final Power BI report. Do not present them as validated business results until the checks in `docs/validation_checklist.md` pass.
-
 ## Project summary
 
 This portfolio project demonstrates an end-to-end sales analytics workflow using **MySQL 8.0+**, **Power BI**, and **DAX**. It is designed to answer business questions about sales performance, recorded profitability, year-over-year movement, discount bands, product/category differences, and regional contribution.
